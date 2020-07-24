@@ -1,13 +1,15 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import re
 import sys
 import argparse
 
+# TODO: make actual arguments - currently set for PLA and 5mm differences
 def main(data, start_temp=225.0, temp_inc=5.0, height_inc=5.0):
     # Set our command regex
     cmd_re = re.compile((
-        r'G[0-9]+\.?[0-9]* X[0-9]+\.?[0-9]* '
+        r'G[0-9]+\.?[0-9]* F[0-9]+\.?[0-9]* X[0-9]+\.?[0-9]* '
         r'Y[0-9]+\.?[0-9]* Z([0-9]+\.?[0-9]*)'
     ))
 
@@ -51,7 +53,7 @@ def main(data, start_temp=225.0, temp_inc=5.0, height_inc=5.0):
                     # If we hit a spot where we need to change the
                     # temperature, then write the gcode command
                     if new_temp < current_temp:
-                        print("Adding new temp")
+                        print("Adding new temp %f") % (new_temp)
                         current_temp = new_temp
                         output_line += ';TYPE:CUSTOM\n'
                         output_line += 'M104 S%d\n' % new_temp
